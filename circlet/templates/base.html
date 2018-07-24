@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{% endblock %} - Circlet</title>
   {% block css %}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css" />
+  <link href="https://fonts.googleapis.com/css?family=Lobster|Open+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/earlyaccess/sawarabigothic.css" rel="stylesheet" />
+    <style>
+    /*.wf-sawarabigothic { font-family: "Sawarabi Gothic"; } */
+    body { font-family: 'Open Sans', "Sawarabi Gothic", sans-serif; }
+    </style>
   {% endblock %}
   {% block js %}
   <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
@@ -13,5 +20,12 @@
 <body>
   {% block content %}{% endblock %}
   {% block footer_js %}{% endblock %}
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p>
+        Copyright © 2018 <a href="https://ashiyahiro.work">あしやひろ</a> All Rights Reserved.
+      </p>
+    </div>
+  </footer>
 </body>
 </html>

@@ -2,12 +2,29 @@
 
 {% block title %}Top{% endblock %}
 
+{% block css %}
+{{ block.super }}
+<style>
+.hero-logo {
+  font-family: 'Lobster', cursive;
+  font-size: 6rem;
+}
+.hero-description {
+  font-size: 1.2rem;
+}
+.hero-body .button {
+  margin: 5rem 0;
+}
+</style>
+{% endblock %}
+
 {% block content %}
-  <section class="hero is-info is-large">
+  <section class="hero is-warning is-bold is-large">
     <div class="hero-body">
       <div class="container">
-        <h1 class="title">Circlet</h1>
-        <a class="button" href="{% url 'login' %}">
+        <h1 class="hero-logo">Circlet</h1>
+        <h2 class="hero-description">twitterでフォロー中のユーザーの中からイベント参加しそうな人を抽出してカタログ化します。</h2>
+        <a class="button is-dark" href="{% url 'login' %}">
           <span class="icon">
             <i class="fab fa-twitter"></i>
           </span>

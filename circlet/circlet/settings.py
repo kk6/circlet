@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'circlet.middleware.TwitterMiddleware',
 ]
 
 ROOT_URLCONF = 'circlet.urls'
@@ -118,3 +120,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CONSUMER_KEY = os.environ['CONSUMER_KEY']
+CONSUMER_SECRET = os.environ['CONSUMER_SECRET']
+CALLBACK_URL = 'http://127.0.0.1:8000/callback/'
+LOGOUT_REDIRECT_URL = '/'

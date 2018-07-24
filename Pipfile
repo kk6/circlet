@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 django = "*"
+tweepy = {git = "https://github.com/tweepy/tweepy.git"}
 
 [dev-packages]
 

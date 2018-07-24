@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "627ef89f247ecee27e9ef0dabe116108d09c47abf171c900a8817befa64f9dd2"
+            "sha256": "28741469906f9dde5cdf7aa7fd4a9e1f116e8577e951e8c7bf276ffef082ad0d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -30,6 +30,10 @@
                 "sha256:ffb9ef1de172603304d9d2819af6f5ece76f2e85ec10692a524dd876e72bf277"
             ],
             "version": "==2018.5"
+        },
+        "tweepy": {
+            "git": "https://github.com/tweepy/tweepy.git",
+            "ref": "2efe385fc69385b57733f747ee62e6be12a1338b"
         }
     },
     "develop": {}

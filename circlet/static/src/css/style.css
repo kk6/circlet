@@ -1,0 +1,36 @@
+/*
+Commons
+ */
+body {
+  font-family: var(--base-font-family);
+}
+
+/*
+Hero
+ */
+.hero-logo {
+  font-family: var(--logo-font-family);
+  font-size: 6rem;
+}
+.hero-description {
+  font-size: 1.2rem;
+}
+.hero-body .button {
+  margin: 5rem 0;
+}
+
+/*
+Navigation bar
+ */
+.brand-logo {
+  font-family: var(--logo-font-family);
+  font-size: 2.5rem;
+}
+
+/*
+footer
+ */
+.footer-logo {
+  font-family: var(--logo-font-family);
+  font-size: 3rem;
+}

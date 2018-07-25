@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}イベント一覧{% endblock %}
+
+{% block content %}
+  {% include "_components/navbar.html" %}
+  <section class="section">
+    <div class="container">
+      <header>
+        <h1 class="title is-4">イベント一覧</h1>
+      </header>
+      <br>
+      <div class="content">
+       {% for expo in object_list %}
+       <p class="control">
+        <a href="#" class="button is-warning is-fullwidth">{{ expo.name }}</a>
+       </p>
+       {% empty %}
+         <p><span class="icon"><i class="fas fa-exclamation-triangle"></i></span>イベントはありません</p>
+       {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

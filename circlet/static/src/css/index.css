@@ -1,9 +1,18 @@
+/*
+Commons
+ */
+:root {
+  --logo-font-family: 'Lobster', cursive;
+}
 body {
   font-family: 'Open Sans', "Sawarabi Gothic", sans-serif;
 }
-/*.wf-sawarabigothic { font-family: "Sawarabi Gothic"; } */
+
+/*
+Hero
+ */
 .hero-logo {
-  font-family: 'Lobster', cursive;
+  font-family: var(--logo-font-family);
   font-size: 6rem;
 }
 .hero-description {
@@ -12,7 +21,11 @@ body {
 .hero-body .button {
   margin: 5rem 0;
 }
+
+/*
+Navigation bar
+ */
 .brand-logo {
-  font-family: 'Lobster', cursive;
+  font-family: var(--logo-font-family);
   font-size: 2.5rem;
 }

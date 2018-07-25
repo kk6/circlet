@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -5,13 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{% endblock %} - Circlet</title>
   {% block css %}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
   <link href="https://fonts.googleapis.com/css?family=Lobster|Open+Sans" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/earlyaccess/sawarabigothic.css" rel="stylesheet" />
-    <style>
-    /*.wf-sawarabigothic { font-family: "Sawarabi Gothic"; } */
-    body { font-family: 'Open Sans', "Sawarabi Gothic", sans-serif; }
-    </style>
+  <link href="https://fonts.googleapis.com/earlyaccess/sawarabigothic.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'build/css/style.css' %}">
   {% endblock %}
   {% block js %}
   <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>

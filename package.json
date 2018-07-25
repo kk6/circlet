@@ -1,0 +1,26 @@
+{
+  "name": "circlet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "postcss circlet/static/src/css/index.css -o circlet/static/build/css/style.css",
+    "watch:css": "npm run build:css -- -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kk6/circlet.git"
+  },
+  "author": "kk6 <hiro.ashiya@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kk6/circlet/issues"
+  },
+  "homepage": "https://github.com/kk6/circlet#readme",
+  "devDependencies": {
+    "autoprefixer": "^9.0.1",
+    "csswring": "^7.0.0",
+    "postcss-cli": "^6.0.0",
+    "postcss-import": "^11.1.0"
+  }
+}

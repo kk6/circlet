@@ -5,4 +5,4 @@ from .models import TwitterAccount
 
 @admin.register(TwitterAccount)
 class TwitterAccountAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ["name", "screen_name"]

@@ -3,9 +3,12 @@ import tweepy
 
 from django.shortcuts import redirect, render
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.views.generic.base import RedirectView
 
-from .models import TwitterAccount
+from circlet.middleware import get_api
+
+from .models import TwitterAccount, UserSettings
 
 
 def login(request):
@@ -33,6 +36,24 @@ def callback(request):
         'access_token': auth.access_token,
         'access_token_secret': auth.access_token_secret,
     }
+    api = get_api(auth.access_token, auth.access_token_secret)
+    twitter_account = api.me()
+    try:
+        obj = TwitterAccount.objects.get(id=twitter_account.id)
+    except TwitterAccount.DoesNotExist:
+        TwitterAccount.objects.create(
+            id=twitter_account.id,
+            name=twitter_account.name,
+            screen_name=twitter_account.screen_name,
+        )
+    else:
+        obj.name = twitter_account.name
+        obj.screen_name = twitter_account.screen_name
+        obj.save()
+        user = User.objects.create_user(username=twitter_account.screen_name)
+        user_settings, _ = UserSettings.objects.get_or_create(user=user)
+        user_settings.twitter_account = obj
+        user_settings.save()
     return redirect('dashboard')
 
 

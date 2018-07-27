@@ -7,19 +7,21 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='User',
+            name="User",
             fields=[
-                ('id', models.BigIntegerField(primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=100, verbose_name='Name')),
-                ('screen_name', models.CharField(max_length=50, unique=True, verbose_name='Screen name')),
+                ("id", models.BigIntegerField(primary_key=True, serialize=False)),
+                ("name", models.CharField(max_length=100, verbose_name="Name")),
+                (
+                    "screen_name",
+                    models.CharField(
+                        max_length=50, unique=True, verbose_name="Screen name"
+                    ),
+                ),
             ],
-            options={
-                'db_table': 'users',
-            },
-        ),
+            options={"db_table": "users"},
+        )
     ]

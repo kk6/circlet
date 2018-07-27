@@ -7,20 +7,25 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Exposition',
+            name="Exposition",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('ruby', models.CharField(blank=True, max_length=255, null=True)),
-                ('short_name', models.CharField(blank=True, max_length=50, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("ruby", models.CharField(blank=True, max_length=255, null=True)),
+                ("short_name", models.CharField(blank=True, max_length=50, null=True)),
             ],
-            options={
-                'db_table': 'expositions',
-            },
-        ),
+            options={"db_table": "expositions"},
+        )
     ]

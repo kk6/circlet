@@ -17,7 +17,9 @@ class TwitterAccount(models.Model):
 
 class UserSettings(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    twitter_account = models.OneToOneField(TwitterAccount, on_delete=models.CASCADE, null=True)
+    twitter_account = models.OneToOneField(
+        TwitterAccount, on_delete=models.CASCADE, null=True
+    )
 
     def __str__(self):
         return f"<UserSettings:{self.id}:{self.user.username}>"

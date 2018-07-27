@@ -12,29 +12,28 @@ from .models import TwitterAccount, UserSettings
 
 
 def login(request):
-    auth = tweepy.OAuthHandler(settings.CONSUMER_KEY,
-                               settings.CONSUMER_SECRET,
-                               settings.CALLBACK_URL)
+    auth = tweepy.OAuthHandler(
+        settings.CONSUMER_KEY, settings.CONSUMER_SECRET, settings.CALLBACK_URL
+    )
     try:
         redirect_url = auth.get_authorization_url()
     except tweepy.TweepError:
-        raise tweepy.TweepError('Error! Failed to get request token')
-    request.session['request_token'] = auth.request_token
+        raise tweepy.TweepError("Error! Failed to get request token")
+    request.session["request_token"] = auth.request_token
     return redirect(redirect_url)
 
 
 def callback(request):
-    verifier = request.GET.get('oauth_verifier')
-    auth = tweepy.OAuthHandler(settings.CONSUMER_KEY,
-                               settings.CONSUMER_SECRET)
-    auth.request_token = request.session['request_token']
+    verifier = request.GET.get("oauth_verifier")
+    auth = tweepy.OAuthHandler(settings.CONSUMER_KEY, settings.CONSUMER_SECRET)
+    auth.request_token = request.session["request_token"]
     try:
         auth.get_access_token(verifier)
     except tweepy.TweepError:
-        print('Error! Failed to get access token.')
-    request.session['access_token_data'] = {
-        'access_token': auth.access_token,
-        'access_token_secret': auth.access_token_secret,
+        print("Error! Failed to get access token.")
+    request.session["access_token_data"] = {
+        "access_token": auth.access_token,
+        "access_token_secret": auth.access_token_secret,
     }
     api = get_api(auth.access_token, auth.access_token_secret)
     twitter_account = api.me()
@@ -58,12 +57,12 @@ def callback(request):
     user_settings, _ = UserSettings.objects.get_or_create(user=user)
     user_settings.twitter_account = obj
     user_settings.save()
-    return redirect('dashboard')
+    return redirect("dashboard")
 
 
 def dashboard(request):
     user = request.twitter_api.me()
-    return render(request, 'dashboard.html', context={'user': user})
+    return render(request, "dashboard.html", context={"user": user})
 
 
 class FetchTwitterFollowingsRedirectView(RedirectView):
@@ -71,7 +70,7 @@ class FetchTwitterFollowingsRedirectView(RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         def chunked(ls, size):
-            return [ls[x:x + size] for x in range(0, len(ls), size)]
+            return [ls[x : x + size] for x in range(0, len(ls), size)]
 
         api = self.request.twitter_api
         user = api.me()
@@ -84,9 +83,7 @@ class FetchTwitterFollowingsRedirectView(RedirectView):
                     obj = TwitterAccount.objects.get(id=friend.id)
                 except TwitterAccount.DoesNotExist:
                     TwitterAccount.objects.create(
-                        id=friend.id,
-                        name=friend.name,
-                        screen_name=friend.screen_name,
+                        id=friend.id, name=friend.name, screen_name=friend.screen_name
                     )
                 else:
                     obj.name = friend.name

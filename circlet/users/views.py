@@ -3,6 +3,9 @@ import tweepy
 
 from django.shortcuts import redirect, render
 from django.conf import settings
+from django.views.generic.base import RedirectView
+
+from .models import TwitterAccount
 
 
 def login(request):
@@ -36,3 +39,32 @@ def callback(request):
 def dashboard(request):
     user = request.twitter_api.me()
     return render(request, 'dashboard.html', context={'user': user})
+
+
+class FetchTwitterFollowingsRedirectView(RedirectView):
+    pattern_name = "dashboard"
+
+    def get_redirect_url(self, *args, **kwargs):
+        def chunked(ls, size):
+            return [ls[x:x + size] for x in range(0, len(ls), size)]
+
+        api = self.request.twitter_api
+        user = api.me()
+        friends_ids = api.friends_ids(user.id)
+        chunked_friends_ids = chunked(friends_ids, 100)
+        for friends_ids in chunked_friends_ids:
+            friends = api.lookup_users(user_ids=friends_ids)
+            for friend in friends:
+                try:
+                    obj = TwitterAccount.objects.get(id=friend.id)
+                except TwitterAccount.DoesNotExist:
+                    TwitterAccount.objects.create(
+                        id=friend.id,
+                        name=friend.name,
+                        screen_name=friend.screen_name,
+                    )
+                else:
+                    obj.name = friend.name
+                    obj.screen_name = friend.screen_name
+                    obj.save()
+        return super().get_redirect_url(*args, **kwargs)

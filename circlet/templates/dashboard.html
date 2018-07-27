@@ -31,7 +31,10 @@
     <div class="container">
       <p><span class="icon has-text-info"><i class="fas fa-info-circle"></i></span><span class="text-with-icon">Circlet 上にフォロー情報が登録されていません。</span></p>
       <br>
-      <button class="button is-warning">twitterからフォロー情報を取得</button>
+      <form action="{% url 'fetch_twitter_followings' %}" method="post">
+        {% csrf_token %}
+        <button class="button is-warning">twitterからフォロー情報を取得</button>
+      </form>
     </div>
   </section>
 {% endblock %}

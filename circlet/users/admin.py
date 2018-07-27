@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
 from django.contrib import admin
+from .models import TwitterAccount
 
-# Register your models here.
+
+@admin.register(TwitterAccount)
+class TwitterAccountAdmin(admin.ModelAdmin):
+    pass

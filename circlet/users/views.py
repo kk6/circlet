@@ -41,7 +41,7 @@ def callback(request):
     try:
         obj = TwitterAccount.objects.get(id=twitter_account.id)
     except TwitterAccount.DoesNotExist:
-        TwitterAccount.objects.create(
+        obj = TwitterAccount.objects.create(
             id=twitter_account.id,
             name=twitter_account.name,
             screen_name=twitter_account.screen_name,
@@ -50,10 +50,14 @@ def callback(request):
         obj.name = twitter_account.name
         obj.screen_name = twitter_account.screen_name
         obj.save()
+    try:
+        # FIXME: screen_name は変わることがあるのでこれだとマズい。今はとりあえず。
+        user = User.objects.get(username=twitter_account.screen_name)
+    except User.DoesNotExist:
         user = User.objects.create_user(username=twitter_account.screen_name)
-        user_settings, _ = UserSettings.objects.get_or_create(user=user)
-        user_settings.twitter_account = obj
-        user_settings.save()
+    user_settings, _ = UserSettings.objects.get_or_create(user=user)
+    user_settings.twitter_account = obj
+    user_settings.save()
     return redirect('dashboard')
 
 

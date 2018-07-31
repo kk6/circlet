@@ -8,6 +8,7 @@ from django.views.generic.base import RedirectView
 
 from circlet.middleware import get_api
 
+from .api import create_or_update_twitter_account
 from .models import TwitterAccount, UserSettings, Friendship
 
 
@@ -37,18 +38,7 @@ def callback(request):
     }
     api = get_api(auth.access_token, auth.access_token_secret)
     twitter_account = api.me()
-    try:
-        obj = TwitterAccount.objects.get(id=twitter_account.id)
-    except TwitterAccount.DoesNotExist:
-        obj = TwitterAccount.objects.create(
-            id=twitter_account.id,
-            name=twitter_account.name,
-            screen_name=twitter_account.screen_name,
-        )
-    else:
-        obj.name = twitter_account.name
-        obj.screen_name = twitter_account.screen_name
-        obj.save()
+    obj = create_or_update_twitter_account(twitter_account.id, twitter_account.name, twitter_account.screen_name)
     try:
         # FIXME: screen_name は変わることがあるのでこれだとマズい。今はとりあえず。
         user = User.objects.get(username=twitter_account.screen_name)
@@ -88,19 +78,10 @@ class FetchTwitterFollowingsRedirectView(RedirectView):
         for friends_ids in chunked_friends_ids:
             friends = api.lookup_users(user_ids=friends_ids)
             for friend in friends:
+                ta = create_or_update_twitter_account(friend.id, friend.name, friend.screen_name)
                 try:
-                    obj = TwitterAccount.objects.get(id=friend.id)
-                except TwitterAccount.DoesNotExist:
-                    obj = TwitterAccount.objects.create(
-                        id=friend.id, name=friend.name, screen_name=friend.screen_name
-                    )
-                else:
-                    obj.name = friend.name
-                    obj.screen_name = friend.screen_name
-                    obj.save()
-                try:
-                    Friendship.objects.get(user=self.request.user, twitter_account=obj)
+                    Friendship.objects.get(user=self.request.user, twitter_account=ta)
                 except Friendship.DoesNotExist:
-                    friendship = Friendship(user=self.request.user, twitter_account=obj)
+                    friendship = Friendship(user=self.request.user, twitter_account=ta)
                     friendship.save()
         return super().get_redirect_url(*args, **kwargs)

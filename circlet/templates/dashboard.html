@@ -24,24 +24,22 @@
             </p>
             <p>
               <h6 class="title is-6">Circlet 上のフォロー情報</h6>
+              {% if last_synced %}
               <ul>
                 <li>フォロー：{{ friendships_count }} 件</li>
                 <li>最終同期日時: {{ last_synced }}</li>
               </ul>
+              {% else %}
+              <p><span class="icon has-text-info"><i class="fas fa-info-circle"></i></span><span class="text-with-icon">Circlet 上にフォロー情報が登録されていません。</span></p>
+              <form action="{% url 'fetch_twitter_followings' %}" method="post">
+                {% csrf_token %}
+                <button class="button is-warning">twitterからフォロー情報を取得</button>
+              </form>
+              {% endif %}
             </p>
           </div>
         </div>
       </article>
-    </div>
-  </section>
-  <section class="section">
-    <div class="container">
-      <p><span class="icon has-text-info"><i class="fas fa-info-circle"></i></span><span class="text-with-icon">Circlet 上にフォロー情報が登録されていません。</span></p>
-      <br>
-      <form action="{% url 'fetch_twitter_followings' %}" method="post">
-        {% csrf_token %}
-        <button class="button is-warning">twitterからフォロー情報を取得</button>
-      </form>
     </div>
   </section>
 {% endblock %}

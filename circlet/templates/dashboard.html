@@ -27,7 +27,7 @@
               {% if last_synced %}
               <ul>
                 <li>フォロー：{{ friendships_count }} 件</li>
-                <li>最終同期日時: {{ last_synced }}</li>
+                <li>最終同期日時: {{ last_synced }}（{{ last_synced_humanized }}）</li>
               </ul>
               {% else %}
               <p><span class="icon has-text-info"><i class="fas fa-info-circle"></i></span><span class="text-with-icon">Circlet 上にフォロー情報が登録されていません。</span></p>

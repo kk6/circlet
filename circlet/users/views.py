@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import arrow
 import tweepy
 
 from django.shortcuts import redirect, render
@@ -56,12 +57,14 @@ def dashboard(request):
     if friendships.exists():
         friendships_count = friendships.count()
         last_synced = friendships.latest("modified").modified
+        last_synced_humanized = arrow.get(last_synced).humanize(locale="ja")
     else:
         friendships_count = 0
         last_synced = None
     return render(request,
                   "dashboard.html",
-                  context={"user": user, "friendships_count": friendships_count, "last_synced": last_synced})
+                  context={"user": user, "friendships_count": friendships_count, "last_synced": last_synced,
+                           "last_synced_humanized": last_synced_humanized})
 
 
 class FetchTwitterFollowingsRedirectView(RedirectView):

@@ -8,6 +8,7 @@ django = "*"
 tweepy = {git = "https://github.com/tweepy/tweepy.git"}
 django-model-utils = "*"
 black = "*"
+arrow = "*"
 
 [dev-packages]
 

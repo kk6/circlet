@@ -2,6 +2,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from model_utils.models import TimeStampedModel
+
 
 class TwitterAccount(models.Model):
     id = models.BigIntegerField(primary_key=True)
@@ -26,3 +28,12 @@ class UserSettings(models.Model):
 
     class Meta:
         db_table = "user_settings"
+
+
+class Friendship(TimeStampedModel):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    twitter_account = models.ForeignKey(TwitterAccount, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "friendships"
+        unique_together = ("user", "twitter_account")

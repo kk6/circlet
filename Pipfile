@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 django = "*"
 tweepy = {git = "https://github.com/tweepy/tweepy.git"}
+django-model-utils = "*"
+black = "*"
 
 [dev-packages]
 

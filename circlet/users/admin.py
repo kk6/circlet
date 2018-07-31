@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
-from .models import TwitterAccount, UserSettings
+from .models import TwitterAccount, UserSettings, Friendship
 
 
 @admin.register(TwitterAccount)
@@ -9,5 +9,10 @@ class TwitterAccountAdmin(admin.ModelAdmin):
 
 
 @admin.register(UserSettings)
-class UserSettingsAddmin(admin.ModelAdmin):
+class UserSettingsAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Friendship)
+class FriendshipAdmin(admin.ModelAdmin):
     pass

@@ -8,7 +8,7 @@ from django.views.generic.base import RedirectView
 
 from circlet.middleware import get_api
 
-from .models import TwitterAccount, UserSettings
+from .models import TwitterAccount, UserSettings, Friendship
 
 
 def login(request):
@@ -62,7 +62,16 @@ def callback(request):
 
 def dashboard(request):
     user = request.twitter_api.me()
-    return render(request, "dashboard.html", context={"user": user})
+    friendships = Friendship.objects.filter(user=request.user)
+    if friendships.exists():
+        friendships_count = friendships.count()
+        last_synced = friendships.latest("modified").modified
+    else:
+        friendships_count = 0
+        last_synced = None
+    return render(request,
+                  "dashboard.html",
+                  context={"user": user, "friendships_count": friendships_count, "last_synced": last_synced})
 
 
 class FetchTwitterFollowingsRedirectView(RedirectView):
@@ -82,11 +91,16 @@ class FetchTwitterFollowingsRedirectView(RedirectView):
                 try:
                     obj = TwitterAccount.objects.get(id=friend.id)
                 except TwitterAccount.DoesNotExist:
-                    TwitterAccount.objects.create(
+                    obj = TwitterAccount.objects.create(
                         id=friend.id, name=friend.name, screen_name=friend.screen_name
                     )
                 else:
                     obj.name = friend.name
                     obj.screen_name = friend.screen_name
                     obj.save()
+                try:
+                    Friendship.objects.get(user=self.request.user, twitter_account=obj)
+                except Friendship.DoesNotExist:
+                    friendship = Friendship(user=self.request.user, twitter_account=obj)
+                    friendship.save()
         return super().get_redirect_url(*args, **kwargs)

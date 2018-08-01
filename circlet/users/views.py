@@ -53,7 +53,9 @@ def callback(request):
 
 def dashboard(request):
     user = request.twitter_api.me()
-    friendships = Friendship.objects.filter(user=request.user)
+    user_settings = UserSettings.objects.get(twitter_account__id=user.id)
+    friendships = Friendship.objects.filter(user=user_settings.user)
+    last_synced_humanized = None
     if friendships.exists():
         friendships_count = friendships.count()
         last_synced = friendships.latest("modified").modified

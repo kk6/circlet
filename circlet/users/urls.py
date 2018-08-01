@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path("login/", views.TwitterLoginRedirectView.as_view(), name="login"),
-    path("callback/", views.callback, name="callback"),
+    path("callback/", views.TwitterCallbackRedirectView.as_view(), name="callback"),
     path("dashboard/", views.dashboard, name="dashboard"),
     path(
         "fetch_twitter_followings/",

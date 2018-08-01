@@ -67,6 +67,7 @@ class TwitterCallbackRedirectView(RedirectView):
 def dashboard(request):
     user = request.twitter_api.me()
     friendships = Friendship.objects.filter(user=request.user)
+    last_synced_humanized = None
     if friendships.exists():
         friendships_count = friendships.count()
         last_synced = friendships.latest("modified").modified

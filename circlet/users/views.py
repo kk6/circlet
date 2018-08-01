@@ -29,39 +29,30 @@ class TwitterLoginRedirectView(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
-class TwitterCallbackRedirectView(RedirectView):
-    pattern_name = "dashboard"
-    oauth = tweepy.OAuthHandler(settings.CONSUMER_KEY, settings.CONSUMER_SECRET)
-    user_model = User
-
-    def get_access_token(self, verifier):
-        try:
-            self.oauth.get_access_token(verifier)
-        except tweepy.TweepError:
-            raise tweepy.TweepError("Error! Failed to get access token.")
-        return (self.oauth.access_token, self.oauth.access_token_secret)
-
-    def get_or_create_user(self, screen_name):
-        try:
-            # FIXME: screen_name は変わることがあるのでこれだとマズい。今はとりあえず。
-            user = self.user_model.objects.get(username=screen_name)
-        except self.user_model.DoesNotExist:
-            user = self.user_model.objects.create_user(username=screen_name)
-        return user
-
-    def get_redirect_url(self, *args, **kwargs):
-        verifier = self.request.GET.get("oauth_verifier")
-        self.oauth.request_token = self.request.session["request_token"]
-        token, secret = self.get_access_token(verifier)
-        self.request.session["access_token_data"] = {"access_token": token, "access_token_secret": secret}
-        api = get_api(token, secret)
-        twitter_account = api.me()
-        obj = create_or_update_twitter_account(twitter_account.id, twitter_account.name, twitter_account.screen_name)
-        user = self.get_or_create_user(twitter_account.screen_name)
-        user_settings, _ = UserSettings.objects.get_or_create(user=user)
-        user_settings.twitter_account = obj
-        user_settings.save()
-        return super().get_redirect_url(*args, **kwargs)
+def callback(request):
+    verifier = request.GET.get("oauth_verifier")
+    auth = tweepy.OAuthHandler(settings.CONSUMER_KEY, settings.CONSUMER_SECRET)
+    auth.request_token = request.session["request_token"]
+    try:
+        auth.get_access_token(verifier)
+    except tweepy.TweepError:
+        print("Error! Failed to get access token.")
+    request.session["access_token_data"] = {
+        "access_token": auth.access_token,
+        "access_token_secret": auth.access_token_secret,
+    }
+    api = get_api(auth.access_token, auth.access_token_secret)
+    twitter_account = api.me()
+    obj = create_or_update_twitter_account(twitter_account.id, twitter_account.name, twitter_account.screen_name)
+    try:
+        # FIXME: screen_name は変わることがあるのでこれだとマズい。今はとりあえず。
+        user = User.objects.get(username=twitter_account.screen_name)
+    except User.DoesNotExist:
+        user = User.objects.create_user(username=twitter_account.screen_name)
+    user_settings, _ = UserSettings.objects.get_or_create(user=user)
+    user_settings.twitter_account = obj
+    user_settings.save()
+    return redirect("dashboard")
 
 
 def dashboard(request):

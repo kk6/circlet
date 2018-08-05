@@ -7,19 +7,21 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('users', '0006_auto_20180728_1059'),
-    ]
+    dependencies = [("users", "0006_auto_20180728_1059")]
 
     operations = [
         migrations.AlterField(
-            model_name='friendship',
-            name='twitter_account',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.TwitterAccount'),
+            model_name="friendship",
+            name="twitter_account",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="users.TwitterAccount"
+            ),
         ),
         migrations.AlterField(
-            model_name='friendship',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="friendship",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]

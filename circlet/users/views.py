@@ -40,7 +40,9 @@ def callback(request):
     }
     api = get_api(auth.access_token, auth.access_token_secret)
     twitter_account = api.me()
-    obj = create_or_update_twitter_account(twitter_account.id, twitter_account.name, twitter_account.screen_name)
+    obj = create_or_update_twitter_account(
+        twitter_account.id, twitter_account.name, twitter_account.screen_name
+    )
     try:
         # FIXME: screen_name は変わることがあるのでこれだとマズい。今はとりあえず。
         user = User.objects.get(username=twitter_account.screen_name)
@@ -64,10 +66,16 @@ def dashboard(request):
         friendships_count = 0
         last_synced = None
         last_synced_humanized = None
-    return render(request,
-                  "dashboard.html",
-                  context={"twitter_user_info": twitter_user_info, "friendships_count": friendships_count,
-                           "last_synced": last_synced, "last_synced_humanized": last_synced_humanized})
+    return render(
+        request,
+        "dashboard.html",
+        context={
+            "twitter_user_info": twitter_user_info,
+            "friendships_count": friendships_count,
+            "last_synced": last_synced,
+            "last_synced_humanized": last_synced_humanized,
+        },
+    )
 
 
 class FetchTwitterFollowingsRedirectView(RedirectView):
@@ -83,7 +91,9 @@ class FetchTwitterFollowingsRedirectView(RedirectView):
         for friends_ids in chunked_friends_ids:
             friends = api.lookup_users(user_ids=friends_ids)
             for friend in friends:
-                ta = create_or_update_twitter_account(friend.id, friend.name, friend.screen_name)
+                ta = create_or_update_twitter_account(
+                    friend.id, friend.name, friend.screen_name
+                )
                 try:
                     Friendship.objects.get(user=user, twitter_account=ta)
                 except Friendship.DoesNotExist:

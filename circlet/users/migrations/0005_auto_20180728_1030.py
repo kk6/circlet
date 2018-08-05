@@ -6,14 +6,14 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('users', '0004_friendship'),
-    ]
+    dependencies = [("users", "0004_friendship")]
 
     operations = [
         migrations.AlterField(
-            model_name='friendship',
-            name='twitter_account',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='users.TwitterAccount'),
-        ),
+            model_name="friendship",
+            name="twitter_account",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE, to="users.TwitterAccount"
+            ),
+        )
     ]

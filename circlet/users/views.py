@@ -53,8 +53,8 @@ def callback(request):
 
 
 def dashboard(request):
-    user = request.twitter_api.me()
-    user_settings = UserSettings.objects.get(twitter_account__id=user.id)
+    twitter_user_info = request.twitter_api.me()
+    user_settings = UserSettings.objects.get(twitter_account__id=twitter_user_info.id)
     friendships = Friendship.objects.filter(user=user_settings.user)
     if friendships.exists():
         friendships_count = friendships.count()
@@ -66,25 +66,27 @@ def dashboard(request):
         last_synced_humanized = None
     return render(request,
                   "dashboard.html",
-                  context={"user": user, "friendships_count": friendships_count, "last_synced": last_synced,
-                           "last_synced_humanized": last_synced_humanized})
+                  context={"twitter_user_info": twitter_user_info, "friendships_count": friendships_count,
+                           "last_synced": last_synced, "last_synced_humanized": last_synced_humanized})
 
 
 class FetchTwitterFollowingsRedirectView(RedirectView):
     pattern_name = "dashboard"
 
     def get_redirect_url(self, *args, **kwargs):
+        # TODO: フォロー外れた人のFriendshipレコードが残ったままとなり、twitter上のフォロー数より多くなる問題を直す
         api = self.request.twitter_api
-        user = api.me()
-        friends_ids = api.friends_ids(user.id)
+        twitter_user_info = api.me()
+        user_settings = UserSettings.objects.get(twitter_account__id=twitter_user_info.id)
+        friends_ids = api.friends_ids(twitter_user_info.id)
         chunked_friends_ids = chunked(friends_ids, 100)
         for friends_ids in chunked_friends_ids:
             friends = api.lookup_users(user_ids=friends_ids)
             for friend in friends:
                 ta = create_or_update_twitter_account(friend.id, friend.name, friend.screen_name)
                 try:
-                    Friendship.objects.get(user=self.request.user, twitter_account=ta)
+                    Friendship.objects.get(user=user_settings.user, twitter_account=ta)
                 except Friendship.DoesNotExist:
-                    friendship = Friendship(user=self.request.user, twitter_account=ta)
+                    friendship = Friendship(user=user_settings.user, twitter_account=ta)
                     friendship.save()
         return super().get_redirect_url(*args, **kwargs)

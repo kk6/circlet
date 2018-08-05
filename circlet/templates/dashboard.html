@@ -10,17 +10,17 @@
       <article class="media">
         <div class="media-left">
           <figure class="image is-64x64">
-            <img src="{{ user.profile_image_url|full }}" alt="Image" style="border-radius: 50%;">
+            <img src="{{ twitter_user_info.profile_image_url|full }}" alt="Image" style="border-radius: 50%;">
           </figure>
         </div>
         <div class="media-content">
           <div class="content">
             <p>
-              <strong>{{ user.name }}</strong>
-              <a href="https://twitter.com/{{ user.screen_name }}"><small>@{{ user.screen_name }}</small></a>
+              <strong>{{ twitter_user_info.name }}</strong>
+              <a href="https://twitter.com/{{ twitter_user_info.screen_name }}"><small>@{{ twitter_user_info.screen_name }}</small></a>
             </p>
             <p>
-              {{ user.friends_count }} 人をフォロー中
+              {{ twitter_user_info.friends_count }} 人をフォロー中
             </p>
             <p>
               <h6 class="title is-6">Circlet 上のフォロー情報</h6>

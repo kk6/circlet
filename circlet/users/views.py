@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import arrow
 import tweepy
+from more_itertools import chunked
 
 from django.shortcuts import redirect, render
 from django.conf import settings
@@ -73,9 +74,6 @@ class FetchTwitterFollowingsRedirectView(RedirectView):
     pattern_name = "dashboard"
 
     def get_redirect_url(self, *args, **kwargs):
-        def chunked(ls, size):
-            return [ls[x : x + size] for x in range(0, len(ls), size)]
-
         api = self.request.twitter_api
         user = api.me()
         friends_ids = api.friends_ids(user.id)

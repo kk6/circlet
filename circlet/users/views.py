@@ -10,8 +10,8 @@ from django.views.generic.base import RedirectView
 
 from circlet.middleware import get_api
 
-from .api import create_or_update_twitter_account
-from .models import TwitterAccount, UserSettings, Friendship
+from .api import create_or_update_twitter_account, get_user_by_twitter_id
+from .models import UserSettings, Friendship
 
 
 def login(request):
@@ -54,8 +54,8 @@ def callback(request):
 
 def dashboard(request):
     twitter_user_info = request.twitter_api.me()
-    user_settings = UserSettings.objects.get(twitter_account__id=twitter_user_info.id)
-    friendships = Friendship.objects.filter(user=user_settings.user)
+    user = get_user_by_twitter_id(twitter_user_info.id)
+    friendships = Friendship.objects.filter(user=user)
     if friendships.exists():
         friendships_count = friendships.count()
         last_synced = friendships.latest("modified").modified
@@ -77,7 +77,7 @@ class FetchTwitterFollowingsRedirectView(RedirectView):
         # TODO: フォロー外れた人のFriendshipレコードが残ったままとなり、twitter上のフォロー数より多くなる問題を直す
         api = self.request.twitter_api
         twitter_user_info = api.me()
-        user_settings = UserSettings.objects.get(twitter_account__id=twitter_user_info.id)
+        user = get_user_by_twitter_id(twitter_user_info.id)
         friends_ids = api.friends_ids(twitter_user_info.id)
         chunked_friends_ids = chunked(friends_ids, 100)
         for friends_ids in chunked_friends_ids:
@@ -85,8 +85,8 @@ class FetchTwitterFollowingsRedirectView(RedirectView):
             for friend in friends:
                 ta = create_or_update_twitter_account(friend.id, friend.name, friend.screen_name)
                 try:
-                    Friendship.objects.get(user=user_settings.user, twitter_account=ta)
+                    Friendship.objects.get(user=user, twitter_account=ta)
                 except Friendship.DoesNotExist:
-                    friendship = Friendship(user=user_settings.user, twitter_account=ta)
+                    friendship = Friendship(user=user, twitter_account=ta)
                     friendship.save()
         return super().get_redirect_url(*args, **kwargs)

@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.views.generic.base import RedirectView
 
-from circlet.middleware import get_api
+from services.twitter import get_api
 
 from .api import create_or_update_twitter_account, get_user_by_twitter_id
 from .models import UserSettings, Friendship

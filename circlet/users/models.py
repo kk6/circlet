@@ -34,6 +34,9 @@ class Friendship(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     twitter_account = models.ForeignKey(TwitterAccount, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"<Friendship:{self.user.username}:{self.twitter_account.screen_name}>"
+
     class Meta:
         db_table = "friendships"
         unique_together = ("user", "twitter_account")

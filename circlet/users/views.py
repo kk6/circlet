@@ -94,9 +94,5 @@ class FetchTwitterFollowingsRedirectView(RedirectView):
                 ta = create_or_update_twitter_account(
                     friend.id, friend.name, friend.screen_name
                 )
-                try:
-                    Friendship.objects.get(user=user, twitter_account=ta)
-                except Friendship.DoesNotExist:
-                    friendship = Friendship(user=user, twitter_account=ta)
-                    friendship.save()
+                Friendship.objects.get_or_create(user=user, twitter_account=ta)
         return super().get_redirect_url(*args, **kwargs)

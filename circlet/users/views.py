@@ -10,7 +10,7 @@ from django.views.generic.base import RedirectView
 
 from services.twitter import get_api
 
-from .api import create_or_update_twitter_account, get_user_by_twitter_id
+from .api import create_or_update_twitter_account, get_user_by_twitter_id, get_removed_followings_ids
 from .models import UserSettings, Friendship
 
 
@@ -88,11 +88,14 @@ class FetchTwitterFollowingsRedirectView(RedirectView):
         user = get_user_by_twitter_id(twitter_user_info.id)
         friends_ids = api.friends_ids(twitter_user_info.id)
         chunked_friends_ids = chunked(friends_ids, 100)
-        for friends_ids in chunked_friends_ids:
-            friends = api.lookup_users(user_ids=friends_ids)
+        for ids in chunked_friends_ids:
+            friends = api.lookup_users(user_ids=ids)
             for friend in friends:
                 ta = create_or_update_twitter_account(
                     friend.id, friend.name, friend.screen_name
                 )
                 Friendship.objects.get_or_create(user=user, twitter_account=ta)
+        removed_ids = get_removed_followings_ids(user, friends_ids)
+        if removed_ids:
+            Friendship.objects.filter(user=user, twitter_account__in=removed_ids).delete()
         return super().get_redirect_url(*args, **kwargs)

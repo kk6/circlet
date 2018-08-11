@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from .models import TwitterAccount, UserSettings
+from .models import TwitterAccount, UserSettings, Friendship
 
 
 def create_or_update_twitter_account(twitter_id, name, screen_name):
@@ -33,3 +33,17 @@ def get_user_by_twitter_id(twitter_id):
     """
     settings = UserSettings.objects.get(twitter_account__id=twitter_id)
     return settings.user
+
+
+def get_removed_followings_ids(user, twitter_friends_ids):
+    """Get removed followings's twitter ids.
+
+    :param twitter_friends_ids:
+    :return: removed followings's twitter ids.
+
+    """
+    circlet_friends_ids = Friendship.objects.filter(user=user).values_list(
+        "twitter_account__id", flat=True
+    )
+    removed_ids = set(circlet_friends_ids).difference(twitter_friends_ids)
+    return removed_ids

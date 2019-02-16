@@ -7,11 +7,14 @@ name = "pypi"
 django = "*"
 tweepy = {git = "https://github.com/tweepy/tweepy.git"}
 django-model-utils = "*"
-black = "*"
 arrow = "*"
 more-itertools = "*"
 
 [dev-packages]
+ black = "*"
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true
